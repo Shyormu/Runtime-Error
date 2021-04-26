@@ -5,6 +5,8 @@
 #include <QMessageBox>
 
 #include "loginDialog.h"
+#include "databaseManager.h"
+#include "databaseViewer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,6 +30,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     loginDialog* lDialog;
+    databaseViewer* dbView;
+    databaseManager* database;
 
     bool isAdmin;
 };

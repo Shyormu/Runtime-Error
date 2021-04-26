@@ -8,6 +8,16 @@ MainWindow::MainWindow(QWidget *parent)
     isAdmin = false;
 
     ui->setupUi(this);
+
+    // initialize database manager object
+    const QString FILE_NAME = "baseballProject.db";
+
+    // path is set to search in debug folder
+    QString dbPath = qApp->applicationDirPath();
+    dbPath.append('/' + FILE_NAME);
+
+    // open database with file path
+    database = new databaseManager(dbPath);
 }
 
 MainWindow::~MainWindow()
@@ -35,5 +45,9 @@ void MainWindow::on_actionLog_out_triggered()
 
 void MainWindow::on_actionView_Database_triggered()
 {
-
+    // open new database view window
+    dbView = new databaseViewer(nullptr, isAdmin);
+    dbView->exec();
+    delete dbView;
+    dbView = nullptr;
 }
