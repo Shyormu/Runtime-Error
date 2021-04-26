@@ -34,6 +34,13 @@ public:
     //!
     QSqlQueryModel* getTeamViewModel(const QString& teamName);
 
+    //!
+    //! \brief getAllByLeagueModel
+    //! \param leagueType league type to filter all teams by
+    //! \return model containing all information related to the baseball teams whose league matches leagueType
+    //!
+    QSqlQueryModel* getAllByLeagueModel(const QString& leagueType);
+
 private:
     //!
     //! \brief mainDatabase

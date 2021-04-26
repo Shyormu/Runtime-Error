@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Take Me Out to the Ballgame</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -36,8 +36,15 @@
     </property>
     <addaction name="actionView_Database"/>
    </widget>
+   <widget class="QMenu" name="menuPlan_a_Trip">
+    <property name="title">
+     <string>Plan a Trip</string>
+    </property>
+    <addaction name="actionFrom_Dodger_Stadium"/>
+   </widget>
    <addaction name="menuAdmin"/>
    <addaction name="menuDatabase"/>
+   <addaction name="menuPlan_a_Trip"/>
   </widget>
   <action name="actionLog_in">
    <property name="text">
@@ -52,6 +59,11 @@
   <action name="actionView_Database">
    <property name="text">
     <string>View Database</string>
+   </property>
+  </action>
+  <action name="actionFrom_Dodger_Stadium">
+   <property name="text">
+    <string>From Dodger Stadium</string>
    </property>
   </action>
  </widget>

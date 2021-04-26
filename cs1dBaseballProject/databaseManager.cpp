@@ -42,13 +42,45 @@ QSqlQueryModel* databaseManager::getTeamViewModel(const QString& teamName)
     qDebug() << teamName;
 
     // query database for all information in row containing teamName
-    query.prepare("SELECT STADIUM, CAPACITY, LOCATION, SURFACE, LEAGUE, DATE, CENTER, TYPOLOGY, ROOF FROM MLBINFO WHERE TEAM = :TEAMNAME");
+    query.prepare("SELECT TEAM, STADIUM, CAPACITY, LOCATION, SURFACE, LEAGUE, DATE, CENTER, TYPOLOGY, ROOF FROM MLBINFO WHERE TEAM = :TEAMNAME");
     query.bindValue(":TEAMNAME", teamName);
 
     query.exec();
 
     // set model's query to previously defined query
     model->setQuery(query);
+
+    return model;
+}
+
+QSqlQueryModel* databaseManager::getAllByLeagueModel(const QString& leagueType)
+{
+    QSqlQueryModel* model = new QSqlQueryModel;
+    QSqlQuery query;
+
+    qDebug() << leagueType;
+
+    if (leagueType == "Both")
+    {
+        // query database for all information in row containing teamName
+        query.prepare("SELECT DISTINCT TEAM, STADIUM, CAPACITY, LOCATION, SURFACE, LEAGUE, DATE, CENTER, TYPOLOGY, ROOF FROM MLBINFO");
+
+        query.exec();
+
+        // set model's query to previously defined query
+        model->setQuery(query);
+    }
+    else
+    {
+        // query database for all information in row containing teamName
+        query.prepare("SELECT TEAM, STADIUM, CAPACITY, LOCATION, SURFACE, LEAGUE, DATE, CENTER, TYPOLOGY, ROOF FROM MLBINFO WHERE LEAGUE = :LEAGUETYPE");
+        query.bindValue(":LEAGUETYPE", leagueType);
+
+        query.exec();
+
+        // set model's query to previously defined query
+        model->setQuery(query);
+    }
 
     return model;
 }

@@ -26,6 +26,8 @@ private slots:
 
     void on_displayTeamButton_clicked();
 
+    void on_displayAllButton_clicked();
+
 private:
     Ui::databaseViewer *ui;
 

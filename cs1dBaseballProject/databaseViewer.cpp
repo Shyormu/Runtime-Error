@@ -13,19 +13,35 @@ databaseViewer::databaseViewer(QWidget *parent, bool adminUser, databaseManager*
 
     temp = database->getTeamNames();
 
-    // populate campuses combo box
-    for(auto &i : database->getTeamNames())
+    // populate team combo box
+    for (auto &i : database->getTeamNames())
     {
         ui->teamSelectBox->addItem(i);
         //ui->teamSelectBoxSouv->addItem(i);
     }
 
+    // populate league combo box
+    ui->leagueSelectBox->addItem("American League");
+    ui->leagueSelectBox->addItem("National League");
+    ui->leagueSelectBox->addItem("Both Leagues");
+
+    // populate sorting combo box
+    ui->sortSelectBox->addItem("Sort by team");
+    ui->sortSelectBox->addItem("Sort by stadium");
+    ui->sortSelectBox->addItem("Unsorted");
+
     // get admin status from main window
     isAdmin = adminUser;
 
+    if (!isAdmin)
+    {
+        ui->addStadiumButton->setEnabled(false);
+        ui->modifyStadiumButton->setEnabled(false);
+    }
+
     // populate the souvenir and campus distance models once on init
     // calling button press code for same effect
-    on_displayTeamButton_clicked();
+    //on_displayTeamButton_clicked();
     //on_displaySouvButton_clicked();
 }
 
@@ -37,12 +53,28 @@ databaseViewer::~databaseViewer()
 
 void databaseViewer::on_modifyStadiumButton_clicked()
 {
+    // ensure user is an admin before allowing modifications
+    if (isAdmin)
+    {
 
+    }
+    else
+    {
+        QMessageBox::information(this, QObject::tr("Warning!"), tr("Only administrators can modify stadiums."));
+    }
 }
 
 void databaseViewer::on_addStadiumButton_clicked()
 {
+    // ensure user is an admin before allowing modifications
+    if (isAdmin)
+    {
 
+    }
+    else
+    {
+        QMessageBox::information(this, QObject::tr("Warning!"), tr("Only administrators can add stadiums."));
+    }
 }
 
 void databaseViewer::on_closeDatabaseButton_clicked()
@@ -52,7 +84,7 @@ void databaseViewer::on_closeDatabaseButton_clicked()
 
 void databaseViewer::on_displayTeamButton_clicked()
 {
-    if(ui->teamSelectBox->currentText() == "")
+    if (ui->teamSelectBox->currentText() == "Select a team...")
     {
         QMessageBox::warning(this, "Error", "Please select a team first.");
     }
@@ -62,25 +94,69 @@ void databaseViewer::on_displayTeamButton_clicked()
 
         auto model = database->getTeamViewModel(ui->teamSelectBox->currentText());
 
-        model->setHeaderData(0, Qt::Horizontal, QObject::tr("Stadium Name"));
-        model->setHeaderData(1, Qt::Horizontal, QObject::tr("Seating Capacity"));
-        model->setHeaderData(2, Qt::Horizontal, QObject::tr("Location"));
-        model->setHeaderData(3, Qt::Horizontal, QObject::tr("Playing Surface"));
-        model->setHeaderData(4, Qt::Horizontal, QObject::tr("League"));
-        model->setHeaderData(5, Qt::Horizontal, QObject::tr("Date Opened"));
-        model->setHeaderData(6, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
-        model->setHeaderData(7, Qt::Horizontal, QObject::tr("Park Typology"));
-        model->setHeaderData(8, Qt::Horizontal, QObject::tr("Roof Type"));
+        model->setHeaderData(0, Qt::Horizontal, QObject::tr("Team Name"));
+        model->setHeaderData(1, Qt::Horizontal, QObject::tr("Stadium Name"));
+        model->setHeaderData(2, Qt::Horizontal, QObject::tr("Seating Capacity"));
+        model->setHeaderData(3, Qt::Horizontal, QObject::tr("Location"));
+        model->setHeaderData(4, Qt::Horizontal, QObject::tr("Playing Surface"));
+        model->setHeaderData(5, Qt::Horizontal, QObject::tr("League"));
+        model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date Opened"));
+        model->setHeaderData(7, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
+        model->setHeaderData(8, Qt::Horizontal, QObject::tr("Park Typology"));
+        model->setHeaderData(9, Qt::Horizontal, QObject::tr("Roof Type"));
 
         ui->teamTableView->setModel(model);
-        ui->teamTableView->setColumnWidth(0,180);
-        ui->teamTableView->setColumnWidth(1,110);
-        ui->teamTableView->setColumnWidth(2,160);
+        ui->teamTableView->setColumnWidth(0,140);
+        ui->teamTableView->setColumnWidth(1,200);
+        ui->teamTableView->setColumnWidth(2,110);
         ui->teamTableView->setColumnWidth(3,160);
-        ui->teamTableView->setColumnWidth(4,70);
-        ui->teamTableView->setColumnWidth(5,80);
-        ui->teamTableView->setColumnWidth(6,130);
-        ui->teamTableView->setColumnWidth(7,90);
-        ui->teamTableView->setColumnWidth(8,70);
+        ui->teamTableView->setColumnWidth(4,160);
+        ui->teamTableView->setColumnWidth(5,70);
+        ui->teamTableView->setColumnWidth(6,80);
+        ui->teamTableView->setColumnWidth(7,130);
+        ui->teamTableView->setColumnWidth(8,90);
+        ui->teamTableView->setColumnWidth(9,70);
     }
+}
+
+void databaseViewer::on_displayAllButton_clicked()
+{
+    QString leagueType;
+
+    if (ui->leagueSelectBox->currentText() == "National League")
+    {
+        leagueType = "National";
+    }
+    else if (ui->leagueSelectBox->currentText() == "American League")
+    {
+        leagueType = "American";
+    }
+    else
+    {
+        leagueType = "Both";
+    }
+    auto model = database->getAllByLeagueModel(leagueType);
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Team Name"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Stadium Name"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Seating Capacity"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Location"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Playing Surface"));
+    model->setHeaderData(5, Qt::Horizontal, QObject::tr("League"));
+    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date Opened"));
+    model->setHeaderData(7, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
+    model->setHeaderData(8, Qt::Horizontal, QObject::tr("Park Typology"));
+    model->setHeaderData(9, Qt::Horizontal, QObject::tr("Roof Type"));
+
+    ui->teamTableView->setModel(model);
+    ui->teamTableView->setColumnWidth(0,140);
+    ui->teamTableView->setColumnWidth(1,200);
+    ui->teamTableView->setColumnWidth(2,110);
+    ui->teamTableView->setColumnWidth(3,160);
+    ui->teamTableView->setColumnWidth(4,160);
+    ui->teamTableView->setColumnWidth(5,70);
+    ui->teamTableView->setColumnWidth(6,80);
+    ui->teamTableView->setColumnWidth(7,130);
+    ui->teamTableView->setColumnWidth(8,90);
+    ui->teamTableView->setColumnWidth(9,70);
 }
