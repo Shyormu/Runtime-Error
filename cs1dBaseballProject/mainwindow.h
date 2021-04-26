@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
+
+#include "loginDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +18,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_actionLog_in_triggered();
+
+    void on_actionLog_out_triggered();
+
+    void on_actionView_Database_triggered();
+
 private:
     Ui::MainWindow *ui;
+    loginDialog* lDialog;
+
+    bool isAdmin;
 };
 #endif // MAINWINDOW_H
