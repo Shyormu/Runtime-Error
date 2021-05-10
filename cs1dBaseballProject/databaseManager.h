@@ -9,6 +9,7 @@
 #include <QTableView>
 #include <vector>
 #include <algorithm>
+#include "stadium.h"
 
 using namespace std;
 
@@ -26,6 +27,12 @@ public:
     //! \return QString vector of all team names
     //!
     vector<QString> getTeamNames();
+
+    //!
+    //! \brief getStadiums
+    //! \return vector of stadium objects holding all stored stadiums
+    //!
+    vector<stadium>* getStadiums();
 
     //!
     //! \brief getTeamViewModel

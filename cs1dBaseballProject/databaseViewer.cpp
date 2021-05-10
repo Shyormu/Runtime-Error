@@ -121,42 +121,83 @@ void databaseViewer::on_displayTeamButton_clicked()
 
 void databaseViewer::on_displayAllButton_clicked()
 {
-    QString leagueType;
 
-    if (ui->leagueSelectBox->currentText() == "National League")
-    {
-        leagueType = "National";
-    }
-    else if (ui->leagueSelectBox->currentText() == "American League")
-    {
-        leagueType = "American";
-    }
-    else
-    {
-        leagueType = "Both";
-    }
-    auto model = database->getAllByLeagueModel(leagueType);
+    vector<stadium>* stadiums = database->getStadiums();
 
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Team Name"));
-    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Stadium Name"));
-    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Seating Capacity"));
-    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Location"));
-    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Playing Surface"));
-    model->setHeaderData(5, Qt::Horizontal, QObject::tr("League"));
-    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date Opened"));
-    model->setHeaderData(7, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
-    model->setHeaderData(8, Qt::Horizontal, QObject::tr("Park Typology"));
-    model->setHeaderData(9, Qt::Horizontal, QObject::tr("Roof Type"));
 
-    ui->teamTableView->setModel(model);
-    ui->teamTableView->setColumnWidth(0,140);
-    ui->teamTableView->setColumnWidth(1,200);
-    ui->teamTableView->setColumnWidth(2,110);
-    ui->teamTableView->setColumnWidth(3,160);
-    ui->teamTableView->setColumnWidth(4,160);
-    ui->teamTableView->setColumnWidth(5,70);
-    ui->teamTableView->setColumnWidth(6,80);
-    ui->teamTableView->setColumnWidth(7,130);
-    ui->teamTableView->setColumnWidth(8,90);
-    ui->teamTableView->setColumnWidth(9,70);
+    ui->teamTableView->
+
+    // set up the table of transactions
+    ui->teamTableView->setColumnCount(5);
+    ui->teamTableView->setColumnWidth(0, 275);
+    ui->transactionTableWidget->setColumnWidth(1, 225);
+    ui->transactionTableWidget->setColumnWidth(2, 70);
+    ui->transactionTableWidget->setColumnWidth(3, 70);
+    ui->transactionTableWidget->setColumnWidth(4, 108);
+    ui->transactionTableWidget->setRowCount(0);
+    ui->transactionTableWidget->verticalHeader()->hide();
+    ui->transactionTableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem("Campus"));
+    ui->transactionTableWidget->setHorizontalHeaderItem(1, new QTableWidgetItem("Souvenir"));
+    ui->transactionTableWidget->setHorizontalHeaderItem(2, new QTableWidgetItem("Price"));
+    ui->transactionTableWidget->setHorizontalHeaderItem(3, new QTableWidgetItem("Quantity"));
+    ui->transactionTableWidget->setHorizontalHeaderItem(4, new QTableWidgetItem("Total"));
+    ui->transactionTableWidget->setSortingEnabled(false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    QString leagueType;
+
+//    if (ui->leagueSelectBox->currentText() == "National League")
+//    {
+//        leagueType = "National";
+//    }
+//    else if (ui->leagueSelectBox->currentText() == "American League")
+//    {
+//        leagueType = "American";
+//    }
+//    else
+//    {
+//        leagueType = "Both";
+//    }
+//    auto model = database->getAllByLeagueModel(leagueType);
+
+//    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Team Name"));
+//    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Stadium Name"));
+//    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Seating Capacity"));
+//    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Location"));
+//    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Playing Surface"));
+//    model->setHeaderData(5, Qt::Horizontal, QObject::tr("League"));
+//    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date Opened"));
+//    model->setHeaderData(7, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
+//    model->setHeaderData(8, Qt::Horizontal, QObject::tr("Park Typology"));
+//    model->setHeaderData(9, Qt::Horizontal, QObject::tr("Roof Type"));
+
+//    ui->teamTableView->setModel(model);
+//    ui->teamTableView->setColumnWidth(0,140);
+//    ui->teamTableView->setColumnWidth(1,200);
+//    ui->teamTableView->setColumnWidth(2,110);
+//    ui->teamTableView->setColumnWidth(3,160);
+//    ui->teamTableView->setColumnWidth(4,160);
+//    ui->teamTableView->setColumnWidth(5,70);
+//    ui->teamTableView->setColumnWidth(6,80);
+//    ui->teamTableView->setColumnWidth(7,130);
+//    ui->teamTableView->setColumnWidth(8,90);
+//    ui->teamTableView->setColumnWidth(9,70);
+
+}
+
+void databaseViewer::filterLeague(vector<stadium>* stadiums, QString selection)
+{
+
 }

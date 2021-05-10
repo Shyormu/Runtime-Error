@@ -18,6 +18,7 @@ public:
     ~databaseViewer();
 
 private slots:
+
     void on_modifyStadiumButton_clicked();
 
     void on_addStadiumButton_clicked();
@@ -28,7 +29,11 @@ private slots:
 
     void on_displayAllButton_clicked();
 
+
 private:
+
+    void filterLeague(vector<stadium>* stadiums, QString selection);
+
     Ui::databaseViewer *ui;
 
     databaseManager* database;
