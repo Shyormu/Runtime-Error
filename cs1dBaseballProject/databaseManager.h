@@ -35,6 +35,13 @@ public:
     vector<stadium>* getStadiums();
 
     //!
+    //! \brief getTeam
+    //! \param teamName name of the team to get information from
+    //! \return stadium object whose team name is equal to teamName
+    //!
+    stadium getTeam(const QString& teamName);
+
+    //!
     //! \brief getTeamViewModel
     //! \param teamName name of team to get information from
     //! \return model containing all information related to the baseball team

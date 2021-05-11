@@ -78,6 +78,47 @@ vector<stadium>* databaseManager::getStadiums()
 
 
 //=============================================================================================
+stadium databaseManager::getTeam(const QString& teamName)
+{
+    QSqlQuery query;    // to query database
+    stadium newStadium; // stadium object to hold all retrieved elements
+
+    // query database for all information in row containing teamName
+    query.prepare("SELECT TEAM, STADIUM, CAPACITY, LOCATION, SURFACE, LEAGUE, DATE, CENTER, TYPOLOGY, ROOF FROM MLBINFO WHERE TEAM = :TEAMNAME");
+    query.bindValue(":TEAMNAME", teamName);
+
+    // invalid team name was passed
+    if (!(query.exec()))
+    {
+        qDebug() << "error retrieving data for " << teamName;
+        return newStadium;
+    }
+
+    while (query.next())
+    {
+        // assign all retrieved elements to the new stadium object
+        newStadium.setTeamName( query.value(0).toString() );
+        newStadium.setStadiumName( query.value(1).toString() );
+        newStadium.setCapacity( query.value(2).toInt() );
+        newStadium.setLocation( query.value(3).toString() );
+        newStadium.setSurface( query.value(4).toString() );
+        newStadium.setLeague( query.value(5).toString() );
+        newStadium.setDate( query.value(6).toInt() );
+        newStadium.setDistanceToCenter( query.value(7).toInt() );
+        newStadium.setParkType( query.value(8).toString() );
+        newStadium.setRoofType( query.value(9).toString() );
+    }
+
+    qDebug() << "stadium name: " << newStadium.getStadiumName();
+
+    return newStadium;
+
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
 QSqlQueryModel* databaseManager::getTeamViewModel(const QString& teamName)
 {
     QSqlQueryModel* model = new QSqlQueryModel;

@@ -68,16 +68,6 @@
     <attribute name="title">
      <string>Teams</string>
     </attribute>
-    <widget class="QTableView" name="teamTableView">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1261</width>
-       <height>431</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QComboBox" name="teamSelectBox">
      <property name="geometry">
       <rect>
@@ -146,6 +136,16 @@
       <string>Display All Teams</string>
      </property>
     </widget>
+    <widget class="QTableWidget" name="teamTableWidget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1261</width>
+       <height>431</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="souvenirTab">
     <attribute name="title">
@@ -171,16 +171,6 @@
        <y>450</y>
        <width>221</width>
        <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QTableView" name="tableView">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1261</width>
-       <height>431</height>
       </rect>
      </property>
     </widget>

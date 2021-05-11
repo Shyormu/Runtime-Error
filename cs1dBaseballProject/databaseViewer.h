@@ -32,7 +32,9 @@ private slots:
 
 private:
 
-    void filterLeague(vector<stadium>* stadiums, QString selection);
+    void filterLeague(vector<stadium>* stadiums, int index);
+
+    void sortStadiums(vector<stadium>* stadiums);
 
     Ui::databaseViewer *ui;
 

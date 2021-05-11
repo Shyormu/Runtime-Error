@@ -1,6 +1,7 @@
 #include "databaseViewer.h"
 #include "ui_databaseViewer.h"
 
+//=============================================================================================
 databaseViewer::databaseViewer(QWidget *parent, bool adminUser, databaseManager* dbManager) :
     QDialog(parent),
     ui(new Ui::databaseViewer)
@@ -39,18 +40,49 @@ databaseViewer::databaseViewer(QWidget *parent, bool adminUser, databaseManager*
         ui->modifyStadiumButton->setEnabled(false);
     }
 
-    // populate the souvenir and campus distance models once on init
-    // calling button press code for same effect
-    //on_displayTeamButton_clicked();
-    //on_displaySouvButton_clicked();
-}
+    // set up the table to display the team
+    ui->teamTableWidget->setColumnCount(10);
+    ui->teamTableWidget->setColumnWidth(0, 275);
+    ui->teamTableWidget->setColumnWidth(0,140);
+    ui->teamTableWidget->setColumnWidth(1,200);
+    ui->teamTableWidget->setColumnWidth(2,110);
+    ui->teamTableWidget->setColumnWidth(3,160);
+    ui->teamTableWidget->setColumnWidth(4,160);
+    ui->teamTableWidget->setColumnWidth(5,70);
+    ui->teamTableWidget->setColumnWidth(6,80);
+    ui->teamTableWidget->setColumnWidth(7,130);
+    ui->teamTableWidget->setColumnWidth(8,90);
+    ui->teamTableWidget->setColumnWidth(9,70);
+    ui->teamTableWidget->setRowCount(1);
+    ui->teamTableWidget->verticalHeader()->hide();
+    ui->teamTableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem("Team Name"));
+    ui->teamTableWidget->setHorizontalHeaderItem(1, new QTableWidgetItem("Stadium Name"));
+    ui->teamTableWidget->setHorizontalHeaderItem(2, new QTableWidgetItem("Seating Capacity"));
+    ui->teamTableWidget->setHorizontalHeaderItem(3, new QTableWidgetItem("Location"));
+    ui->teamTableWidget->setHorizontalHeaderItem(4, new QTableWidgetItem("Playing Surface"));
+    ui->teamTableWidget->setHorizontalHeaderItem(5, new QTableWidgetItem("League"));
+    ui->teamTableWidget->setHorizontalHeaderItem(6, new QTableWidgetItem("Date Opened"));
+    ui->teamTableWidget->setHorizontalHeaderItem(7, new QTableWidgetItem("Distance to Center (ft)"));
+    ui->teamTableWidget->setHorizontalHeaderItem(8, new QTableWidgetItem("Park Typology"));
+    ui->teamTableWidget->setHorizontalHeaderItem(9, new QTableWidgetItem("Roof Type"));
+    ui->teamTableWidget->setSortingEnabled(false);
 
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
 databaseViewer::~databaseViewer()
 {
     delete ui;
     delete database;
 }
+//=============================================================================================
 
+
+
+//=============================================================================================
 void databaseViewer::on_modifyStadiumButton_clicked()
 {
     // ensure user is an admin before allowing modifications
@@ -63,7 +95,11 @@ void databaseViewer::on_modifyStadiumButton_clicked()
         QMessageBox::information(this, QObject::tr("Warning!"), tr("Only administrators can modify stadiums."));
     }
 }
+//=============================================================================================
 
+
+
+//=============================================================================================
 void databaseViewer::on_addStadiumButton_clicked()
 {
     // ensure user is an admin before allowing modifications
@@ -76,128 +112,214 @@ void databaseViewer::on_addStadiumButton_clicked()
         QMessageBox::information(this, QObject::tr("Warning!"), tr("Only administrators can add stadiums."));
     }
 }
+//=============================================================================================
 
+
+
+//=============================================================================================
 void databaseViewer::on_closeDatabaseButton_clicked()
 {
     this->close();
 }
+//=============================================================================================
 
+
+
+//=============================================================================================
 void databaseViewer::on_displayTeamButton_clicked()
 {
-    if (ui->teamSelectBox->currentText() == "Select a team...")
+    stadium selectedStadium;   // stdaium whose data will be displayed
+    QTableWidgetItem* newItem; // used to insert new items into the table
+
+    // verify user has selected a team to display
+    if (ui->teamSelectBox->currentIndex() == -1)
     {
         QMessageBox::warning(this, "Error", "Please select a team first.");
     }
     else
     {
-        qDebug() << "getting info from " << ui->teamSelectBox->currentText();
+        // get stadium object from database whose team name matches user's selection
+        selectedStadium = database->getTeam(ui->teamSelectBox->currentText());
 
-        auto model = database->getTeamViewModel(ui->teamSelectBox->currentText());
+        // for loop inserts all data for current stadium into cells
+        for (int i = 0; i < 10; i++)
+        {
+            // switch statement to decide what data is being placed into current cell i
+            switch (i)
+            {
+                case 0:
+                    newItem = new QTableWidgetItem(selectedStadium.getTeamName());
+                    break;
+                case 1:
+                    newItem = new QTableWidgetItem(selectedStadium.getStadiumName());
+                    break;
+                case 2:
+                     newItem = new QTableWidgetItem( QString::number( selectedStadium.getCapacity() ) );
+                    break;
+                case 3:
+                    newItem = new QTableWidgetItem(selectedStadium.getLocation());
+                    break;
+                case 4:
+                     newItem = new QTableWidgetItem(selectedStadium.getSurface());
+                    break;
+                case 5:
+                    newItem = new QTableWidgetItem(selectedStadium.getLeague());
+                    break;
+                case 6:
+                    newItem = new QTableWidgetItem( QString::number( selectedStadium.getDate() ) );
+                    break;
+                case 7:
+                    newItem = new QTableWidgetItem( QString::number( selectedStadium.getDistanceToCenter() ) );
+                    break;
+                case 8:
+                    newItem = new QTableWidgetItem(selectedStadium.getParkType());
+                    break;
+                case 9:
+                    newItem = new QTableWidgetItem(selectedStadium.getRoofType());
+                    break;
+                default:
+                    break;
+            }
 
-        model->setHeaderData(0, Qt::Horizontal, QObject::tr("Team Name"));
-        model->setHeaderData(1, Qt::Horizontal, QObject::tr("Stadium Name"));
-        model->setHeaderData(2, Qt::Horizontal, QObject::tr("Seating Capacity"));
-        model->setHeaderData(3, Qt::Horizontal, QObject::tr("Location"));
-        model->setHeaderData(4, Qt::Horizontal, QObject::tr("Playing Surface"));
-        model->setHeaderData(5, Qt::Horizontal, QObject::tr("League"));
-        model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date Opened"));
-        model->setHeaderData(7, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
-        model->setHeaderData(8, Qt::Horizontal, QObject::tr("Park Typology"));
-        model->setHeaderData(9, Qt::Horizontal, QObject::tr("Roof Type"));
-
-        ui->teamTableView->setModel(model);
-        ui->teamTableView->setColumnWidth(0,140);
-        ui->teamTableView->setColumnWidth(1,200);
-        ui->teamTableView->setColumnWidth(2,110);
-        ui->teamTableView->setColumnWidth(3,160);
-        ui->teamTableView->setColumnWidth(4,160);
-        ui->teamTableView->setColumnWidth(5,70);
-        ui->teamTableView->setColumnWidth(6,80);
-        ui->teamTableView->setColumnWidth(7,130);
-        ui->teamTableView->setColumnWidth(8,90);
-        ui->teamTableView->setColumnWidth(9,70);
+            // align item text and place into cell i
+            newItem->setTextAlignment(Qt::AlignCenter);
+            ui->teamTableWidget->setItem(0, i, newItem);
+        }
     }
 }
+//=============================================================================================
 
+
+
+//=============================================================================================
 void databaseViewer::on_displayAllButton_clicked()
 {
+    vector<stadium>* stadiums; // vector of all stadiums to be modified and displayed
+    QTableWidgetItem* newItem; // used to insert new items into the table
 
-    vector<stadium>* stadiums = database->getStadiums();
+    // output error messages if the button is pressed without selecting filter/sort options
+    if (ui->leagueSelectBox->currentIndex() == -1)
+    {
+        QMessageBox::warning(this, "Error", "Please select a league first.");
+    }
+    else if (ui->sortSelectBox->currentIndex() == -1)
+    {
+        QMessageBox::warning(this, "Error", "Please select a sorting method first.");
+    }
+    else
+    {
+        // get vector of all stadiums from database
+        stadiums = database->getStadiums();
 
+        // filter the stadiums held in the vector by selected league
+        filterLeague(stadiums, ui->leagueSelectBox->currentIndex());
 
-    ui->teamTableView->
+        // sort the remaining stadiums according to selection
+        sortStadiums(stadiums);
 
-    // set up the table of transactions
-    ui->teamTableView->setColumnCount(5);
-    ui->teamTableView->setColumnWidth(0, 275);
-    ui->transactionTableWidget->setColumnWidth(1, 225);
-    ui->transactionTableWidget->setColumnWidth(2, 70);
-    ui->transactionTableWidget->setColumnWidth(3, 70);
-    ui->transactionTableWidget->setColumnWidth(4, 108);
-    ui->transactionTableWidget->setRowCount(0);
-    ui->transactionTableWidget->verticalHeader()->hide();
-    ui->transactionTableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem("Campus"));
-    ui->transactionTableWidget->setHorizontalHeaderItem(1, new QTableWidgetItem("Souvenir"));
-    ui->transactionTableWidget->setHorizontalHeaderItem(2, new QTableWidgetItem("Price"));
-    ui->transactionTableWidget->setHorizontalHeaderItem(3, new QTableWidgetItem("Quantity"));
-    ui->transactionTableWidget->setHorizontalHeaderItem(4, new QTableWidgetItem("Total"));
-    ui->transactionTableWidget->setSortingEnabled(false);
+        // adjust number of rows in the table
+        ui->teamTableWidget->setRowCount(stadiums->size());
 
+        // nested for loop iterates through each row and inserts data into each individual cell in each individual row according to # of stadiums
+        for (int row = 0; row < stadiums->size(); row++)
+        {
+            for (int col = 0; col < 10; col++)
+            {
+                // switch statement to decide what data is being placed into current cell i
+                switch (col)
+                {
+                    case 0:
+                        newItem = new QTableWidgetItem(stadiums->at(row).getTeamName());
+                        break;
+                    case 1:
+                        newItem = new QTableWidgetItem(stadiums->at(row).getStadiumName());
+                        break;
+                    case 2:
+                         newItem = new QTableWidgetItem( QString::number( stadiums->at(row).getCapacity() ) );
+                        break;
+                    case 3:
+                        newItem = new QTableWidgetItem(stadiums->at(row).getLocation());
+                        break;
+                    case 4:
+                         newItem = new QTableWidgetItem(stadiums->at(row).getSurface());
+                        break;
+                    case 5:
+                        newItem = new QTableWidgetItem(stadiums->at(row).getLeague());
+                        break;
+                    case 6:
+                        newItem = new QTableWidgetItem( QString::number( stadiums->at(row).getDate() ) );
+                        break;
+                    case 7:
+                        newItem = new QTableWidgetItem( QString::number( stadiums->at(row).getDistanceToCenter() ) );
+                        break;
+                    case 8:
+                        newItem = new QTableWidgetItem(stadiums->at(row).getParkType());
+                        break;
+                    case 9:
+                        newItem = new QTableWidgetItem(stadiums->at(row).getRoofType());
+                        break;
+                    default:
+                        break;
+                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-//    QString leagueType;
-
-//    if (ui->leagueSelectBox->currentText() == "National League")
-//    {
-//        leagueType = "National";
-//    }
-//    else if (ui->leagueSelectBox->currentText() == "American League")
-//    {
-//        leagueType = "American";
-//    }
-//    else
-//    {
-//        leagueType = "Both";
-//    }
-//    auto model = database->getAllByLeagueModel(leagueType);
-
-//    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Team Name"));
-//    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Stadium Name"));
-//    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Seating Capacity"));
-//    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Location"));
-//    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Playing Surface"));
-//    model->setHeaderData(5, Qt::Horizontal, QObject::tr("League"));
-//    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date Opened"));
-//    model->setHeaderData(7, Qt::Horizontal, QObject::tr("Distance to Center (ft)"));
-//    model->setHeaderData(8, Qt::Horizontal, QObject::tr("Park Typology"));
-//    model->setHeaderData(9, Qt::Horizontal, QObject::tr("Roof Type"));
-
-//    ui->teamTableView->setModel(model);
-//    ui->teamTableView->setColumnWidth(0,140);
-//    ui->teamTableView->setColumnWidth(1,200);
-//    ui->teamTableView->setColumnWidth(2,110);
-//    ui->teamTableView->setColumnWidth(3,160);
-//    ui->teamTableView->setColumnWidth(4,160);
-//    ui->teamTableView->setColumnWidth(5,70);
-//    ui->teamTableView->setColumnWidth(6,80);
-//    ui->teamTableView->setColumnWidth(7,130);
-//    ui->teamTableView->setColumnWidth(8,90);
-//    ui->teamTableView->setColumnWidth(9,70);
-
+                // align item text and place into cell i
+                newItem->setTextAlignment(Qt::AlignCenter);
+                ui->teamTableWidget->setItem(row, col, newItem);
+            }
+        }
+    }
 }
+//=============================================================================================
 
-void databaseViewer::filterLeague(vector<stadium>* stadiums, QString selection)
+
+
+//=============================================================================================
+void databaseViewer::filterLeague(vector<stadium>* stadiums, int index)
 {
+    if (index == 0)
+    {
+        // remove all elements in the vector that don't have the league type "American"
+        for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+        {
+            if (it->getLeague() != "American")
+            {
+                stadiums->erase(it);
+                it--;
+            }
+        }
+    }
+    else if (index == 1)
+    {
+        // remove all elements in the vector that don't have the league type "National"
+        for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+        {
+            if (it->getLeague() != "National")
+            {
+                stadiums->erase(it);
+                it--;
+            }
+        }
 
+    }
+    // if both leagues were selected, no changes will be made
+
+    return;
+}
+//=============================================================================================
+
+void databaseViewer::sortStadiums(vector<stadium>* stadiums)
+{
+    // sort vector in order of stadium name
+    for (int m = 0; m < stadiums->size(); m++)
+    {
+        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        {
+            if (stadiums->at(n).getStadiumName() > stadiums->at(n+1).getStadiumName())
+            {
+                stadium temp = stadiums->at(n);
+                stadiums->at(n) = stadiums->at(n+1);
+                stadiums->at(n+1) = temp;
+            }
+        }
+    }
 }
