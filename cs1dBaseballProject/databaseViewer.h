@@ -38,6 +38,10 @@ private:
 
     void sortByTeam(vector<stadium>* stadiums);
 
+    void sortByParkTypology(vector<stadium>* stadiums);
+
+    void sortByDateOpened(vector<stadium>* stadiums);
+
     Ui::databaseViewer *ui;
 
     databaseManager* database;

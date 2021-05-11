@@ -29,6 +29,8 @@ databaseViewer::databaseViewer(QWidget *parent, bool adminUser, databaseManager*
     // populate sorting combo box
     ui->sortSelectBox->addItem("Sort by team");
     ui->sortSelectBox->addItem("Sort by stadium");
+    ui->sortSelectBox->addItem("Sort by open date");
+    ui->sortSelectBox->addItem("Sort by park typology");
     ui->sortSelectBox->addItem("Unsorted");
 
     // get admin status from main window
@@ -141,6 +143,9 @@ void databaseViewer::on_displayTeamButton_clicked()
         // get stadium object from database whose team name matches user's selection
         selectedStadium = database->getTeam(ui->teamSelectBox->currentText());
 
+        // adjust number of rows in the table
+        ui->teamTableWidget->setRowCount(1);
+
         // for loop inserts all data for current stadium into cells
         for (int i = 0; i < 10; i++)
         {
@@ -216,15 +221,26 @@ void databaseViewer::on_displayAllButton_clicked()
 
         // sort the remaining stadiums according to selection
 
-        if (ui->sortSelectBox->currentIndex() == 0)
+        switch (ui->sortSelectBox->currentIndex())
         {
-            // sort by team name in alphabetical order
-            sortByTeam(stadiums);
-        }
-        else if (ui->sortSelectBox->currentIndex() == 1)
-        {
-            // sort by stadium name in alphabetical order
-            sortByStadium(stadiums);
+            case 0:
+                // sort alphabetically by team name
+                sortByTeam(stadiums);
+                break;
+            case 1:
+                // sort alphabetically by stadium name
+                sortByStadium(stadiums);
+                break;
+            case 2:
+                // sort chronologically from oldest to newest
+                sortByDateOpened(stadiums);
+                break;
+            case 3:
+                // sort alphabetically by park typology
+                sortByParkTypology(stadiums);
+                break;
+            default:
+                break;
         }
 
         // adjust number of rows in the table
@@ -349,6 +365,48 @@ void databaseViewer::sortByTeam(vector<stadium>* stadiums)
         for (int n = 0; n < stadiums->size() - m - 1; n++)
         {
             if (stadiums->at(n).getTeamName() > stadiums->at(n+1).getTeamName())
+            {
+                stadium temp = stadiums->at(n);
+                stadiums->at(n) = stadiums->at(n+1);
+                stadiums->at(n+1) = temp;
+            }
+        }
+    }
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
+void databaseViewer::sortByParkTypology(vector<stadium>* stadiums)
+{
+    // sort vector in order of stadium name
+    for (int m = 0; m < stadiums->size(); m++)
+    {
+        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        {
+            if (stadiums->at(n).getParkType() > stadiums->at(n+1).getParkType())
+            {
+                stadium temp = stadiums->at(n);
+                stadiums->at(n) = stadiums->at(n+1);
+                stadiums->at(n+1) = temp;
+            }
+        }
+    }
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
+void databaseViewer::sortByDateOpened(vector<stadium>* stadiums)
+{
+    // sort vector in order of stadium name
+    for (int m = 0; m < stadiums->size(); m++)
+    {
+        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        {
+            if (stadiums->at(n).getDate() > stadiums->at(n+1).getDate())
             {
                 stadium temp = stadiums->at(n);
                 stadiums->at(n) = stadiums->at(n+1);
