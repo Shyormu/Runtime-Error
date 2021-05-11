@@ -215,7 +215,17 @@ void databaseViewer::on_displayAllButton_clicked()
         filterLeague(stadiums, ui->leagueSelectBox->currentIndex());
 
         // sort the remaining stadiums according to selection
-        sortStadiums(stadiums);
+
+        if (ui->sortSelectBox->currentIndex() == 0)
+        {
+            // sort by team name in alphabetical order
+            sortByTeam(stadiums);
+        }
+        else if (ui->sortSelectBox->currentIndex() == 1)
+        {
+            // sort by stadium name in alphabetical order
+            sortByStadium(stadiums);
+        }
 
         // adjust number of rows in the table
         ui->teamTableWidget->setRowCount(stadiums->size());
@@ -307,7 +317,10 @@ void databaseViewer::filterLeague(vector<stadium>* stadiums, int index)
 }
 //=============================================================================================
 
-void databaseViewer::sortStadiums(vector<stadium>* stadiums)
+
+
+//=============================================================================================
+void databaseViewer::sortByStadium(vector<stadium>* stadiums)
 {
     // sort vector in order of stadium name
     for (int m = 0; m < stadiums->size(); m++)
@@ -323,3 +336,25 @@ void databaseViewer::sortStadiums(vector<stadium>* stadiums)
         }
     }
 }
+//=============================================================================================
+
+
+
+//=============================================================================================
+void databaseViewer::sortByTeam(vector<stadium>* stadiums)
+{
+    // sort vector in order of stadium name
+    for (int m = 0; m < stadiums->size(); m++)
+    {
+        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        {
+            if (stadiums->at(n).getTeamName() > stadiums->at(n+1).getTeamName())
+            {
+                stadium temp = stadiums->at(n);
+                stadiums->at(n) = stadiums->at(n+1);
+                stadiums->at(n+1) = temp;
+            }
+        }
+    }
+}
+//=============================================================================================

@@ -34,7 +34,9 @@ private:
 
     void filterLeague(vector<stadium>* stadiums, int index);
 
-    void sortStadiums(vector<stadium>* stadiums);
+    void sortByStadium(vector<stadium>* stadiums);
+
+    void sortByTeam(vector<stadium>* stadiums);
 
     Ui::databaseViewer *ui;
 
