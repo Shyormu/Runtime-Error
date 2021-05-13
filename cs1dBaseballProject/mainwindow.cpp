@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // path is set to search in debug folder
     QString dbPath = qApp->applicationDirPath();
-    dbPath.append('/' + FILE_NAME);
+    dbPath.append("/../../SQLite/" + FILE_NAME);
 
     // open database with file path
     database = new databaseManager(dbPath);
