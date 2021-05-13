@@ -22,16 +22,20 @@ databaseViewer::databaseViewer(QWidget *parent, bool adminUser, databaseManager*
     }
 
     // populate league combo box
-    ui->leagueSelectBox->addItem("American League");
-    ui->leagueSelectBox->addItem("National League");
-    ui->leagueSelectBox->addItem("Both Leagues");
+    ui->filterSelectBox->addItem("American League");
+    ui->filterSelectBox->addItem("National League");
+    ui->filterSelectBox->addItem("Greatest distance to center field");
+    ui->filterSelectBox->addItem("Smallest distance to center field");
+    ui->filterSelectBox->addItem("Open roof type");
+    ui->filterSelectBox->addItem("All teams");
 
     // populate sorting combo box
     ui->sortSelectBox->addItem("Sort by team");
     ui->sortSelectBox->addItem("Sort by stadium");
     ui->sortSelectBox->addItem("Sort by open date");
     ui->sortSelectBox->addItem("Sort by park typology");
-    ui->sortSelectBox->addItem("Unsorted");
+    ui->sortSelectBox->addItem("Sort by seating capacity");
+    ui->sortSelectBox->addItem("No sorting");
 
     // get admin status from main window
     isAdmin = adminUser;
@@ -68,6 +72,9 @@ databaseViewer::databaseViewer(QWidget *parent, bool adminUser, databaseManager*
     ui->teamTableWidget->setHorizontalHeaderItem(8, new QTableWidgetItem("Park Typology"));
     ui->teamTableWidget->setHorizontalHeaderItem(9, new QTableWidgetItem("Roof Type"));
     ui->teamTableWidget->setSortingEnabled(false);
+
+    ui->seatingLabel->setVisible(false);
+    ui->roofLabel->setVisible(false);
 
 }
 //=============================================================================================
@@ -146,6 +153,10 @@ void databaseViewer::on_displayTeamButton_clicked()
         // adjust number of rows in the table
         ui->teamTableWidget->setRowCount(1);
 
+        // clear the labels for filtering/sorting
+        ui->seatingLabel->setVisible(false);
+        ui->roofLabel->setVisible(false);
+
         // for loop inserts all data for current stadium into cells
         for (int i = 0; i < 10; i++)
         {
@@ -201,9 +212,10 @@ void databaseViewer::on_displayAllButton_clicked()
 {
     vector<stadium>* stadiums; // vector of all stadiums to be modified and displayed
     QTableWidgetItem* newItem; // used to insert new items into the table
+    QString labelUpdate;       // used to update the counter label
 
     // output error messages if the button is pressed without selecting filter/sort options
-    if (ui->leagueSelectBox->currentIndex() == -1)
+    if (ui->filterSelectBox->currentIndex() == -1)
     {
         QMessageBox::warning(this, "Error", "Please select a league first.");
     }
@@ -216,38 +228,84 @@ void databaseViewer::on_displayAllButton_clicked()
         // get vector of all stadiums from database
         stadiums = database->getStadiums();
 
-        // filter the stadiums held in the vector by selected league
-        filterLeague(stadiums, ui->leagueSelectBox->currentIndex());
+        // clear the labels for filtering/sorting stats
+        ui->seatingLabel->setText("");
+        ui->seatingLabel->setVisible(false);
+        ui->roofLabel->setText("");
+        ui->roofLabel->setVisible(false);
+
+        // filter the stadiums held in the vector by selection
+        switch (ui->filterSelectBox->currentIndex())
+        {
+        case 0:
+            // filter by league selection (national)
+            filterLeague(stadiums, ui->filterSelectBox->currentIndex());
+            break;
+        case 1:
+            // filter by league selection (american)
+            filterLeague(stadiums, ui->filterSelectBox->currentIndex());
+            break;
+        case 2:
+            // filter by distance to center field (greatest)
+            filterGreatestDistance(stadiums);
+            break;
+        case 3:
+            // filter by distance to center field (smallest)
+            filterSmallestDistance(stadiums);
+            break;
+        case 4:
+            // filter by open roof type
+            filterRoofType(stadiums);
+
+            // update the label to display the total seating capacity of all stadiums
+            labelUpdate = "Number of stadiums with an open roof type: ";
+            labelUpdate.append( QString::number(stadiums->size()) );
+            ui->roofLabel->setText(labelUpdate);
+            ui->roofLabel->setVisible(true);
+        default:
+            // no filter
+            break;
+        }
 
         // sort the remaining stadiums according to selection
-
         switch (ui->sortSelectBox->currentIndex())
         {
-            case 0:
-                // sort alphabetically by team name
-                sortByTeam(stadiums);
-                break;
-            case 1:
-                // sort alphabetically by stadium name
-                sortByStadium(stadiums);
-                break;
-            case 2:
-                // sort chronologically from oldest to newest
-                sortByDateOpened(stadiums);
-                break;
-            case 3:
-                // sort alphabetically by park typology
-                sortByParkTypology(stadiums);
-                break;
-            default:
-                break;
+        case 0:
+            // sort alphabetically by team name
+            sortByTeam(stadiums);
+            break;
+        case 1:
+            // sort alphabetically by stadium name
+            sortByStadium(stadiums);
+            break;
+        case 2:
+            // sort chronologically from oldest to newest
+            sortByDateOpened(stadiums);
+            break;
+        case 3:
+            // sort alphabetically by park typology
+            sortByParkTypology(stadiums);
+            break;
+        case 4:
+            // sort smallest to largest by seating capacity
+            sortByCapacity(stadiums);
+
+            // update the label to display the total seating capacity of all stadiums
+            labelUpdate = "Total seating capacity of displayed stadiums: ";
+            labelUpdate.append( QString::number(totalCapacity(stadiums)) );
+            ui->seatingLabel->setText(labelUpdate);
+            ui->seatingLabel->setVisible(true);
+            break;
+        default:
+            // no sorting
+            break;
         }
 
         // adjust number of rows in the table
         ui->teamTableWidget->setRowCount(stadiums->size());
 
         // nested for loop iterates through each row and inserts data into each individual cell in each individual row according to # of stadiums
-        for (int row = 0; row < stadiums->size(); row++)
+        for (ulong row = 0; row < stadiums->size(); row++)
         {
             for (int col = 0; col < 10; col++)
             {
@@ -336,12 +394,93 @@ void databaseViewer::filterLeague(vector<stadium>* stadiums, int index)
 
 
 //=============================================================================================
+void databaseViewer::filterGreatestDistance(vector<stadium>* stadiums)
+{
+    int greatestDistance = 0; // keeps track of the current greatest distance
+
+    greatestDistance = stadiums->begin()->getDistanceToCenter();
+
+    // find the greatest distance
+    for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+    {
+        if (it->getDistanceToCenter() > greatestDistance)
+        {
+            greatestDistance = it->getDistanceToCenter();
+        }
+    }
+
+    // remove all elements in the vector that are less than the current greatest distance
+    for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+    {
+        if (it->getDistanceToCenter() != greatestDistance)
+        {
+            stadiums->erase(it);
+            it--;
+        }
+    }
+
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
+void databaseViewer::filterSmallestDistance(vector<stadium>* stadiums)
+{
+    int smallestDistance = 0; // keeps track of the current smallest distance
+
+    smallestDistance = stadiums->begin()->getDistanceToCenter();
+
+    // find the smallest distance
+    for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+    {
+        if (it->getDistanceToCenter() < smallestDistance)
+        {
+            smallestDistance = it->getDistanceToCenter();
+        }
+    }
+
+    // remove all elements in the vector that are greater than the current smallest distance
+    for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+    {
+        if (it->getDistanceToCenter() != smallestDistance)
+        {
+            stadiums->erase(it);
+            it--;
+        }
+    }
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
+void databaseViewer::filterRoofType(vector<stadium>* stadiums)
+{
+
+    // remove all elements in the vector that don't have the roof type "Open"
+    for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+    {
+        if (it->getRoofType() != "Open")
+        {
+            stadiums->erase(it);
+            it--;
+        }
+    }
+
+    return;
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
 void databaseViewer::sortByStadium(vector<stadium>* stadiums)
 {
     // sort vector in order of stadium name
-    for (int m = 0; m < stadiums->size(); m++)
+    for (ulong m = 0; m < stadiums->size(); m++)
     {
-        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        for (ulong n = 0; n < stadiums->size() - m - 1; n++)
         {
             if (stadiums->at(n).getStadiumName() > stadiums->at(n+1).getStadiumName())
             {
@@ -360,9 +499,9 @@ void databaseViewer::sortByStadium(vector<stadium>* stadiums)
 void databaseViewer::sortByTeam(vector<stadium>* stadiums)
 {
     // sort vector in order of stadium name
-    for (int m = 0; m < stadiums->size(); m++)
+    for (ulong m = 0; m < stadiums->size(); m++)
     {
-        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        for (ulong n = 0; n < stadiums->size() - m - 1; n++)
         {
             if (stadiums->at(n).getTeamName() > stadiums->at(n+1).getTeamName())
             {
@@ -381,9 +520,9 @@ void databaseViewer::sortByTeam(vector<stadium>* stadiums)
 void databaseViewer::sortByParkTypology(vector<stadium>* stadiums)
 {
     // sort vector in order of stadium name
-    for (int m = 0; m < stadiums->size(); m++)
+    for (ulong m = 0; m < stadiums->size(); m++)
     {
-        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        for (ulong n = 0; n < stadiums->size() - m - 1; n++)
         {
             if (stadiums->at(n).getParkType() > stadiums->at(n+1).getParkType())
             {
@@ -402,9 +541,9 @@ void databaseViewer::sortByParkTypology(vector<stadium>* stadiums)
 void databaseViewer::sortByDateOpened(vector<stadium>* stadiums)
 {
     // sort vector in order of stadium name
-    for (int m = 0; m < stadiums->size(); m++)
+    for (ulong m = 0; m < stadiums->size(); m++)
     {
-        for (int n = 0; n < stadiums->size() - m - 1; n++)
+        for (ulong n = 0; n < stadiums->size() - m - 1; n++)
         {
             if (stadiums->at(n).getDate() > stadiums->at(n+1).getDate())
             {
@@ -416,3 +555,41 @@ void databaseViewer::sortByDateOpened(vector<stadium>* stadiums)
     }
 }
 //=============================================================================================
+
+
+
+//=============================================================================================
+void databaseViewer::sortByCapacity(vector<stadium>* stadiums)
+{
+    // sort vector in order of stadium seating capacity
+    for (ulong m = 0; m < stadiums->size(); m++)
+    {
+        for (ulong n = 0; n < stadiums->size() - m - 1; n++)
+        {
+            if (stadiums->at(n).getCapacity() > stadiums->at(n+1).getCapacity())
+            {
+                stadium temp = stadiums->at(n);
+                stadiums->at(n) = stadiums->at(n+1);
+                stadiums->at(n+1) = temp;
+            }
+        }
+    }
+}
+//=============================================================================================
+
+
+
+//=============================================================================================
+long databaseViewer::totalCapacity(vector<stadium>* stadiums)
+{
+    long count = 0;
+
+    for (auto it = stadiums->begin(); it != stadiums->end(); it++)
+    {
+        count += it->getCapacity();
+    }
+
+    return count;
+}
+//=============================================================================================
+

@@ -94,25 +94,31 @@
       <string>Display Individual Team</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="leagueSelectBox">
+    <widget class="QComboBox" name="filterSelectBox">
      <property name="geometry">
       <rect>
-       <x>690</x>
+       <x>750</x>
        <y>450</y>
-       <width>131</width>
+       <width>201</width>
        <height>22</height>
       </rect>
      </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string>Select a filter...</string>
+     </property>
      <property name="placeholderText">
-      <string>Select a league...</string>
+      <string>Select a filter...</string>
      </property>
     </widget>
     <widget class="QComboBox" name="sortSelectBox">
      <property name="geometry">
       <rect>
-       <x>830</x>
+       <x>960</x>
        <y>450</y>
-       <width>131</width>
+       <width>201</width>
        <height>22</height>
       </rect>
      </property>
@@ -126,7 +132,7 @@
     <widget class="QPushButton" name="displayAllButton">
      <property name="geometry">
       <rect>
-       <x>970</x>
+       <x>1170</x>
        <y>450</y>
        <width>91</width>
        <height>23</height>
@@ -144,6 +150,48 @@
        <width>1261</width>
        <height>431</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="roofLabel">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>440</y>
+       <width>321</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>(displays # of open roof types)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="seatingLabel">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>460</y>
+       <width>321</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>(displays total seating capacity)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
    </widget>
