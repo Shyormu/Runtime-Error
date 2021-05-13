@@ -13,13 +13,15 @@ SOURCES += \
     databaseViewer.cpp \
     loginDialog.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    stadium.cpp
 
 HEADERS += \
     databaseManager.h \
     databaseViewer.h \
     loginDialog.h \
-    mainwindow.h
+    mainwindow.h \
+    stadium.h
 
 FORMS += \
     databaseViewer.ui \
