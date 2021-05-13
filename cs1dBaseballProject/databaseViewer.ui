@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
+    <width>1274</width>
     <height>591</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Database Viewer</string>
   </property>
   <widget class="QPushButton" name="closeDatabaseButton">
    <property name="geometry">
@@ -57,7 +57,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1091</width>
+     <width>1271</width>
      <height>511</height>
     </rect>
    </property>
@@ -68,16 +68,6 @@
     <attribute name="title">
      <string>Teams</string>
     </attribute>
-    <widget class="QTableView" name="teamTableView">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1071</width>
-       <height>431</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QComboBox" name="teamSelectBox">
      <property name="geometry">
       <rect>
@@ -87,18 +77,121 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="placeholderText">
+      <string>Select a team...</string>
+     </property>
     </widget>
     <widget class="QPushButton" name="displayTeamButton">
      <property name="geometry">
       <rect>
        <x>250</x>
        <y>450</y>
-       <width>101</width>
+       <width>121</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Display Team</string>
+      <string>Display Individual Team</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="filterSelectBox">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>450</y>
+       <width>201</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string>Select a filter...</string>
+     </property>
+     <property name="placeholderText">
+      <string>Select a filter...</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="sortSelectBox">
+     <property name="geometry">
+      <rect>
+       <x>960</x>
+       <y>450</y>
+       <width>201</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="currentText">
+      <string>Select a sort type...</string>
+     </property>
+     <property name="placeholderText">
+      <string>Select a sort type...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="displayAllButton">
+     <property name="geometry">
+      <rect>
+       <x>1170</x>
+       <y>450</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Display All Teams</string>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="teamTableWidget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1261</width>
+       <height>431</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="roofLabel">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>440</y>
+       <width>321</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>(displays # of open roof types)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="seatingLabel">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>460</y>
+       <width>321</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>(displays total seating capacity)</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
    </widget>
@@ -126,16 +219,6 @@
        <y>450</y>
        <width>221</width>
        <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QTableView" name="tableView">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1071</width>
-       <height>431</height>
       </rect>
      </property>
     </widget>

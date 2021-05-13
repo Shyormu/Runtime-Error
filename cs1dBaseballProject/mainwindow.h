@@ -7,6 +7,7 @@
 #include "loginDialog.h"
 #include "databaseManager.h"
 #include "databaseViewer.h"
+#include "stadium.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
