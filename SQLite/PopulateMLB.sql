@@ -20,7 +20,7 @@ INSERT INTO MLBINFO VALUES (18,'New York Yankees','Yankee Stadium',47422,'Bronx,
 INSERT INTO MLBINFO VALUES (19,'Oakland Athletics','Oakland–Alameda County Coliseum',47170,'Oakland, California','Grass','American',1966,400,'Multipurpose','Open');
 INSERT INTO MLBINFO VALUES (20,'Philadelphia Phillies','Citizens Bank Park',43651,'Philadelphia, Pennsylvania','Grass','National',2004,401,'Retro Classic','Open');
 INSERT INTO MLBINFO VALUES (21,'Pittsburgh Pirates','PNC Park',38362,'Pittsburgh, Pennsylvania','Grass','National',2001,399,'Retro Classic','Open');
-INSERT INTO MLBINFO VALUES (22,'San Diego Padres','Petco Park',37731,'San Diego, California','Grass','National',2004,396,'Retro Modern','Open');
+INSERT INTO MLBINFO VALUES (22,'San Diego Padres','Petco Park',40209,'San Diego, California','Grass','National',2004,396,'Retro Modern','Open');
 INSERT INTO MLBINFO VALUES (23,'San Francisco Giants','Oracle Park',41915,'San Francisco, California','Grass','National',2000,399,'Retro Classic','Open');
 INSERT INTO MLBINFO VALUES (24,'Seattle Mariners','Safeco Field',47943,'Seattle, Washington','Grass','American',1999,401,'Retro Modern','Retractable');
 INSERT INTO MLBINFO VALUES (25,'St. Louis Cardinals','Busch Stadium',45529,'St. Louis, Missouri','Grass','National',2006,400,'Retro Classic','Open');
