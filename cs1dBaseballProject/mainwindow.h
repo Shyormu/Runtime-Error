@@ -37,12 +37,6 @@ private slots:
 
     void on_gotodisplaybtn_clicked();
 
-    void on_teamcombobox_currentTextChanged(const QString &arg1);
-
-    void on_displaystadiumteambtn_clicked();
-
-    void on_disstadiumstadiumbtn_clicked();
-
     void on_disAmericanTeam_clicked();
 
     void on_disteamopenroof_clicked();
@@ -54,26 +48,6 @@ private slots:
     void on_loadSouvenirInfo_clicked();
 
     void on_Backtoadmin_clicked();
-
-    void on_loadstadiumsbtn_clicked();
-
-    void on_backtopass_clicked();
-
-    void on_AddSouv_clicked();
-
-    void on_BacktoAdmin_clicked();
-
-    void on_TeamCombosouv_activated(const QString &arg1);
-
-    void on_deleteSouvbtn_clicked();
-
-    void on_Souveniralltable_activated(const QModelIndex &index);
-
-    void on_Editsouvbtn_clicked();
-
-    void on_stadiumcombobox_activated(const QString &arg1);
-
-    void on_editstadium_clicked();
 
     void on_DFSbtn_clicked();
 
