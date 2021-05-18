@@ -2,7 +2,6 @@
 #define GRAPH_H
 
 #include <QObject>
-#include "controller.h"
 
 class graph : public QObject
 {
