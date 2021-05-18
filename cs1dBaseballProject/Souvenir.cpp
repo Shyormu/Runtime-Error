@@ -12,12 +12,12 @@ void Souvenir::setItem(const QString &item)
 
 void Souvenir::draw()
 {
-    Ellipse::draw();
+    stadium::draw();
 }
 
 void Souvenir::move(const int x, const int y)
 {
-    Ellipse::move(x,y);
+    stadium::move(x,y);
 }
 
 double Souvenir::perimeter() const
